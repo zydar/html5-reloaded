@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="">
+<html data-ng-app="reloaded">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -61,8 +61,11 @@
         
     </head>
     <body>
-        <h1 class="text-center">Hello World</h1>
-
+        
+        <div class="container" data-ng-controller="hello">
+            <h1 class="text-center">Hello <span data-ng-bind="name"></span>!</h1>
+        </div>
+       
         <!-- Main -->
         <script src="build/js/html5-reloaded.min.js"></script>
     </body>
