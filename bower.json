@@ -1,0 +1,11 @@
+{
+  "name": "html5-reloaded",
+  "description": "ItFactory HTML5 reloaded",
+  "main": "",
+  "license": "MIT",
+  "homepage": "https://github.com/zydar/html5-reloaded.git",
+  "private": true,
+  "dependencies": {
+    "fontawesome": "^5.15.3"
+  }
+}
