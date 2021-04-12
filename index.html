@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html data-ng-app="reloaded">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="referrer" content="unsafe-url">
         <title>Title Page</title>
 
         <!-- Bootstrap CSS -->
@@ -38,6 +38,7 @@
                         Contact
                     </a></li>
                 </ul>
+
                 <form class="navbar-form navbar-left" role="search">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Search">
@@ -60,10 +61,20 @@
         </nav>
         
     </head>
-    <body>
+    <body data-ng-controller="hello">
         
-        <div class="container" data-ng-controller="hello">
+        <div class="container">
             <h1 class="text-center">Hello <span data-ng-bind="name"></span>!</h1>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-4 col-xs-offset4">
+                <ul>
+                    <li data-ng-repeat="user in users">
+                        {{ user.name }}, {{ user.job }}, {{ user.age }}
+                    </li>
+                </ul>
+            </div>
         </div>
        
         <!-- Main -->
