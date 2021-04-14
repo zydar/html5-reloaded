@@ -1,0 +1,15 @@
+.hidden-file-input {
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+
+.file-input-label {
+   /*  margin: 5px;
+    padding: 5px 15px;
+    background-color: rgb(14, 158, 224);
+    color: aliceblue;
+    box-shadow: 0 0 3px;
+    cursor: pointer; */
+    text-transform: capitalize;
+}
