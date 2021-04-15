@@ -1,5 +1,6 @@
-module.exports = function(grunt) {
+module.exports = grunt => {
 
+    require('load-grunt-tasks')(grunt);
     // Project configuration.
     grunt.initConfig({
       pkg: grunt.file.readJSON('package.json'),
@@ -12,7 +13,7 @@ module.exports = function(grunt) {
               'node_modules/jquery/dist/jquery.min.js',
               'node_modules/angular/angular.min.js',
               'node_modules/bootstrap/dist/js/bootstrap.min.js',
-              'src/js/**/*.js'
+              'build.js'
             ],
           dest: 'build/js/<%= pkg.name %>.min.js'
         }
@@ -54,9 +55,32 @@ module.exports = function(grunt) {
           ],
         },
       },
+      babel: {
+        options: {
+          sourceMap: false,
+          presets: ["es2015"],
+        },
+        dist: {
+          files: {
+            "build.js": 'built.js'
+          },
+        },
+      },
+      concat: {
+        options: {
+          separator: ';',
+        },
+        dist: {
+          src: [
+              'src/js/class/*.js', 
+              'src/js/**/*.js'
+          ],
+          dest: 'built.js',
+        },
+      },
       watch: {
           scripts: {
-              files: ['src/js/*.js', 'src/css/**/*.css', 'src/**/*.html'],
+              files: ['src/js/*.js', 'src/js/class/*.js', 'src/css/**/*.css', 'src/**/*.html'],
               tasks: ['dev'],
               options: {
                   spawn: false,
@@ -67,13 +91,15 @@ module.exports = function(grunt) {
     });
   
     // Load the plugin that provides the "uglify" task.
-    grunt.loadNpmTasks('grunt-contrib-uglify');
+    // load-grunt-tasks modul telepítése után már ez nem kell
+    /* grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-babel'); */
   
     // Default task(s).
-    grunt.registerTask('dev', ['uglify', 'cssmin', 'copy']);
+    grunt.registerTask('dev', ['concat', 'babel', 'uglify', 'cssmin', 'copy']);
     grunt.registerTask('default', ['watch']);
   
   };
