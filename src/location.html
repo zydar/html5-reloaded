@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <style type="text/css">
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+
+      /* Optional: Makes the sample page fill the window. */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script>
+
+        function initMaps() {
+            // Térkép és alapértelmezett középpont
+            let map;
+            var centerPosition = { lat: -34.397, lng: 150.644 };
+            var itfPosition = { lat: 46.26387833, lng: 20.15012188 };
+
+            // Felhasználó jelenlegi pozíciója
+            navigator.geolocation.getCurrentPosition(setCurrentPosition);
+            function setCurrentPosition(position) {
+                var mapHolder = document.querySelector("#map");
+                if (position) {
+                   /*  centerPosition = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    }; */
+                    centerPosition = itfPosition;
+                }
+                map = new google.maps.Map(mapHolder, {
+                    center: centerPosition,
+                    zoom: 16,
+                });
+
+                // Marker
+                const image = {
+                    url: 'img/map-marker-32.png'
+                };
+                var marker = new google.maps.Marker({
+                    position: centerPosition,
+                    map: map,
+                    label: "",
+                    draggable: true,
+                    animation: google.maps.Animation.DROP,
+                    icon: image
+                });
+                // marker.addListener("click", toggleBounce);
+                marker.addListener("click", function() {
+                    infowindow.open(map, marker);
+
+                    console.log(
+                        marker.getPosition().lat(),
+                        marker.getPosition().lng()
+                    );
+                });
+
+                function toggleBounce() {
+                    if (marker.getAnimation() !== null) {
+                        marker.setAnimation(null);
+                    } else {
+                        marker.setAnimation(google.maps.Animation.BOUNCE);
+                    }
+                }
+                
+                const contentString =
+                    '<div id="content">' +
+                    '<div id="siteNotice">' +
+                    "</div>" +
+                    '<h1 id="firstHeading" class="firstHeading">ItFactory</h1>' +
+                    '<div id="bodyContent">' +
+                    "<p></p>" +
+                    '<p><a target="_blank" href="http://itfactory.hu">' +
+                    "tovább az oldalra</a> " +
+                    "</p>" +
+                    "</div>" +
+                    "</div>";
+                const infowindow = new google.maps.InfoWindow({
+                    content: contentString,
+                });
+
+
+            }
+        }
+        
+    </script>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?
+        key=AIzaSyBqc_9IhT4p44mm_Cfqq0Y2dkaYs8FsXp8
+        &callback=initMaps"
+      async
+    ></script>
+  </body>
+</html>
