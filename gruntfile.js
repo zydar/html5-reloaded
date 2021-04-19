@@ -60,10 +60,15 @@ module.exports = grunt => {
           sourceMap: false,
           presets: ["es2015"],
         },
-        dist: {
+        main: {
           files: {
             "build.js": 'built.js'
-          },
+          }
+        },
+        local: {
+          files: {
+            "build/js/localStorageClass.js": 'src/js/localStorageClass.js'
+          }
         },
       },
       concat: {
@@ -79,14 +84,22 @@ module.exports = grunt => {
         },
       },
       watch: {
-          scripts: {
-              files: ['src/js/*.js', 'src/js/class/*.js', 'src/css/**/*.css', 'src/**/*.html'],
-              tasks: ['dev'],
-              options: {
-                  spawn: false,
-                  event: ['changed', 'added', 'deleted']
-              },
+        scripts: {
+          files: ['src/js/*.js', 'src/js/class/*.js', 'src/css/**/*.css', 'src/**/*.html'],
+          tasks: ['dev'],
+          options: {
+              spawn: false,
+              event: ['changed', 'added', 'deleted']
           },
+        },
+        babel: {
+          files: ['./src/js/localStorageClass.js'],
+          tasks: ['local'],
+          options: {
+              spawn: false,
+              event: ['changed', 'added', 'deleted']
+          },
+        }
       }
     });
   
@@ -99,7 +112,8 @@ module.exports = grunt => {
     grunt.loadNpmTasks('grunt-babel'); */
   
     // Default task(s).
-    grunt.registerTask('dev', ['concat', 'babel', 'uglify', 'cssmin', 'copy']);
-    grunt.registerTask('default', ['watch']);
+    grunt.registerTask('dev', ['concat', 'babel:main', 'uglify', 'cssmin', 'copy']);
+    grunt.registerTask('local', ['babel:local']);
+    grunt.registerTask('default', ['watch:babel']);
   
   };
