@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audió és Videő lejátszó</title>
+    <style>
+        .row {
+            margin: 15px auto;
+        }
+        .my-button {
+            margin: 10px;
+
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="row">
+        <video id="bigVideo" controls>
+            <source src="img/vizeses.mp4" type="video/mp4"/>
+            Video not supported.
+        </video>
+    </div>
+
+    <div class="row control-div">
+        <button class="my-button play-btn">Lejátszás</button>
+        <button class="my-button backward-btn"><< Tekerés hátra</button>
+        <button class="my-button forward-btn">Tekerés előre >></button>
+        <button class="my-button fullscreen-btn">Teljes képernyő</button>
+    </div>
+
+    <script>
+        var video = document.querySelector('#bigVideo');
+        
+        // Lejátszás, megállítás
+        document.querySelector('.play-btn').addEventListener('click', function(e) {
+            playPause();
+        });
+        video.addEventListener('click', function(e) {
+            e.preventDefault();
+            playPause();
+        });
+
+        // Léptetés
+        document.querySelector('.forward-btn').addEventListener('click', function(e) {
+            video.currentTime = video.currentTime + 1;
+            console.log('Előre: '+video.currentTime);
+        });
+        document.querySelector('.backward-btn').addEventListener('click', function(e) {
+            video.currentTime = video.currentTime - 1;
+            console.log('Vissza: '+video.currentTime);
+        });
+        document.querySelector('.fullscreen-btn').addEventListener('click', function(e) {
+            var controls = document.querySelector('.control-div')
+            video.style.position = 'absolute';
+            video.style.width = '100%';
+            controls.style.position = 'absolute';
+            var s = window.getComputedStyle(video);
+            controls.style.top = (parseInt(s.height, 10) + 15)+'px';
+        });
+
+        function playPause () {
+            if (video.paused) {
+                video.play();
+                document.querySelector('.play-btn').innerHTML = 'Megállítás';
+            } else {
+                video.pause();
+                document.querySelector('.play-btn').innerHTML = 'Lejátszás';
+            }
+        }
+
+    </script>
+
+</body>
+</html>
