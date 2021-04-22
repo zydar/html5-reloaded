@@ -49,7 +49,7 @@ module.exports = grunt => {
             },{
               expand: true,
               cwd: 'src',
-              src: '*.html',
+              src: '**/*.html',
               dest: 'build'
             }
           ],
@@ -77,15 +77,17 @@ module.exports = grunt => {
         },
         dist: {
           src: [
-              'src/js/class/*.js', 
-              'src/js/**/*.js'
+              'src/js/*.js',
+              'src/js/factory/*.js',
+              'src/js/controller/*.js'
           ],
           dest: 'built.js',
         },
       },
+      clean: ['build/'],
       watch: {
         scripts: {
-          files: ['src/js/*.js', 'src/js/class/*.js', 'src/css/**/*.css', 'src/**/*.html'],
+          files: ['src/js/**/*.js', 'src/css/**/*.css', 'src/**/*.html'],
           tasks: ['dev'],
           options: {
               spawn: false,
@@ -112,8 +114,8 @@ module.exports = grunt => {
     grunt.loadNpmTasks('grunt-babel'); */
   
     // Default task(s).
-    grunt.registerTask('dev', ['concat', 'babel:main', 'uglify', 'cssmin', 'copy']);
+    grunt.registerTask('dev', ['clean', 'concat', 'babel:main', 'uglify', 'cssmin', 'copy']);
     grunt.registerTask('local', ['babel:local']);
-    grunt.registerTask('default', ['watch:babel']);
+    grunt.registerTask('default', ['watch:scripts']);
   
   };
