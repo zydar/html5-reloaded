@@ -25,11 +25,11 @@ webapp.factory('userFactory', ['$q', '$http', function($q, $http){
         getUsers: function() {
             var deferred = $q.defer();
             $http.get('json/user.json')
-            .then( function(serverData){
-                deferred.resolve(serverData.data);
-            }, function(err) { // hiba függvény
-                deferred.reject(err);
-            });
+                .then( function(serverData){
+                    deferred.resolve(serverData.data);
+                }, function(err) { // hiba függvény
+                    deferred.reject(err);
+                });
             return deferred.promise;
         }
     };

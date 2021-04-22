@@ -4,7 +4,8 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Title Page</title>
+        <base href="/build/">
+        <title>ItFactory webapp</title>
 
         <!-- Bootstrap CSS -->
         <link href="css/html5-reloaded.min.css" rel="stylesheet">
@@ -18,11 +19,11 @@
     </head>
     <body data-ng-controller="bodyController">
 
-        <div data-ng-include="'template/nav.html'"></div>
+        <div data-ng-include="getTemplate('nav')"></div>
 
-        <div data-ng-include="'template/content.html'"></div>
+        <div data-ng-include="getTemplate('content')"></div>
 
-        <div data-ng-include="'template/login.html'"></div>
+        <div data-ng-include="getTemplate('login')"></div>
 
         <!-- jQuery -->
         <script src="../build/js/html5-reloaded.min.js"></script>
