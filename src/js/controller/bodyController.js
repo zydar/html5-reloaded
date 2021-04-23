@@ -4,7 +4,11 @@ webapp.controller( "bodyController", ['$scope', '$http', 'userFactory', '$rootSc
         $scope.isLoggedIn = false;
         $scope.defaultContent = 'index';
         $scope.currentContentName = '';
-        
+
+        $rootScope.$on( 'noLogin', function() {
+            $scope.isLoggedIn = false;
+        } );
+
         // Ha már be van jelentkezve és van érvényes tokenje
         userFactory.checkLogin()
             .then(function(res) {

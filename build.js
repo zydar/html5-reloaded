@@ -119,7 +119,8 @@ webapp.config(['$routeProvider', '$locationProvider', function ($routeProvider, 
         templateUrl: 'template/content/index.html',
         controller: 'indexController'
     }).when('/users', {
-        templateUrl: 'template/content/users.html'
+        templateUrl: 'template/content/users.html',
+        controller: 'userController'
     }).when('/settings', {
         templateUrl: 'template/content/settings.html'
     }).otherwise({
@@ -130,13 +131,20 @@ webapp.config(['$routeProvider', '$locationProvider', function ($routeProvider, 
     /* $locationProvider.html5Mode(true);
     console.log($locationProvider); */
 }]);; // Login kezelése
-webapp.factory('userFactory', ['$q', '$http', function ($q, $http) {
-    return {
+webapp.factory('userFactory', ['$q', '$http', '$rootScope', function ($q, $http, $rootScope) {
+    var factory = {
+        // Kérés szűrő
+        sendResponse: function sendResponse(defer, response) {
+            if (angular.isDefined(response.loggedIn) && response.loggedIn === false) {
+                $rootScope.$broadcast('noLogin');
+            }
+            defer.resolve(response);
+        },
         doLogin: function doLogin(loginData) {
             var deferred = $q.defer();
 
             $http.post('/dologin', loginData).then(function (loginResponse) {
-                deferred.resolve(loginResponse.data);
+                factory.sendResponse(deferred, loginResponse.data);
             });
             return deferred.promise;
         },
@@ -144,26 +152,38 @@ webapp.factory('userFactory', ['$q', '$http', function ($q, $http) {
             var deferred = $q.defer();
 
             $http.get('/checklogin').then(function (loginResponse) {
-                deferred.resolve(loginResponse.data);
+                factory.sendResponse(deferred, loginResponse.data);
             });
             return deferred.promise;
         },
         getUsers: function getUsers() {
             var deferred = $q.defer();
             $http.get('/users').then(function (serverData) {
-                deferred.resolve(serverData.data);
+                factory.sendResponse(deferred, serverData.data);
             }, function (err) {
                 // hiba függvény
                 deferred.reject(err);
             });
             return deferred.promise;
+        },
+        modUser: function modUser(user) {
+            var deferred = $q.defer();
+            $http.post('/user', user).then(function (res) {
+                factory.sendResponse(deferred, res.data);
+            });
+            return deferred.promise;
         }
     };
+    return factory;
 }]);; // Body controller
 webapp.controller("bodyController", ['$scope', '$http', 'userFactory', '$rootScope', function ($scope, $http, userFactory, $rootScope) {
     $scope.isLoggedIn = false;
     $scope.defaultContent = 'index';
     $scope.currentContentName = '';
+
+    $rootScope.$on('noLogin', function () {
+        $scope.isLoggedIn = false;
+    });
 
     // Ha már be van jelentkezve és van érvényes tokenje
     userFactory.checkLogin().then(function (res) {
@@ -214,4 +234,28 @@ webapp.controller("bodyController", ['$scope', '$http', 'userFactory', '$rootSco
 }]);; // Index controller
 webapp.controller("indexController", ['$scope', '$http', 'userFactory', function ($scope, $http, userFactory) {
     $scope.pageTitle = 'Alkalmazás kezelése.';
+}]);; // User controller
+webapp.controller("userController", ['$scope', '$http', 'userFactory', function ($scope, $http, userFactory) {
+
+    $scope.users = [];
+
+    // Felhasználók listája
+    $scope.getUsers = function () {
+        userFactory.getUsers().then(function (users) {
+            // console.log('users', users);
+            if (users.loggedIn) {
+                $scope.isLoggedIn = users.loggedIn;
+            } else {
+                $scope.users = users;
+            }
+        });
+    };
+    $scope.getUsers();
+
+    // Felhasználó módosítása
+    $scope.modUser = function (user) {
+        userFactory.modUser(user).then(function (saveResult) {
+            console.log('saveResult', saveResult);
+        });
+    };
 }]);

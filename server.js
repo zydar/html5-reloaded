@@ -15,12 +15,20 @@ app.get('/', function(req, res) {
     res.send(index);
 });
 
-app.post('/dologin', function(req, res) {
+// Kérések adatainak összegyűjtése
+function getRequestBody(req, callBack) {
     var requestData = '';
     req.on('data', function(dataPackage) {
         requestData += dataPackage;
     });
     req.on('end', function() {
+        callBack(requestData); 
+    });
+}
+
+// Bejelentkezés
+app.post('/dologin', function(req, res) {
+    getRequestBody(req, function(requestData) {
         var serverResponse = {
             'userId': 0,
             'loggedIn': false
@@ -44,15 +52,14 @@ app.get('/users', function(req, res) {
     if (user === false) {
         return;
     }
-    res.send(JSON.stringify(getUsers()));
+    // res.send(JSON.stringify(getUsers()));
+    res.send(getUsers());
 });
 
 // Bejelentkezés ellenőrzése
 app.get('/checklogin', function(req, res){
     var user = checkUser(req, res);
-    if (user === false) {
-        return;
-    }
+    if (user === false) { return; }
     var fullResponse = {
         'loggedIn': true,
         'user': user
@@ -110,6 +117,27 @@ function checkUser(req, res) {
         return false;
     }
 }
+
+// Felhasználó módosítása
+app.post('/user', function(req, res) {
+    var user = checkUser(req, res);
+    if (!user) { return; }
+
+    getRequestBody(req, function(requestData) {
+        // console.log('server:/user', requestData);
+        var user = JSON.parse(requestData);
+        var users = JSON.parse(getUsers());
+        for(var k in users) {
+            if ( users[k].email === user.email ) {
+                for(var j in user) {
+                    users[k][j] = user[j];
+                }
+            }
+        }
+        fs.writeFileSync(__dirname + '/json/user.json', JSON.stringify(users));
+        res.send(JSON.stringify({'success': true}));
+    });
+});
 
 // Session beolvasása
 function getSessions() {
