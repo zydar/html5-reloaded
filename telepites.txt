@@ -1,0 +1,52 @@
+HTML5 Reloaded 2016 telepítési parancsok:
+1. nodejs telepítése - https://nodejs.org/, projekt könyvtárát létrehozni és belépni cmd-vel
+2. Grunt telepítése: npm i -g grunt
+3. Microsoft Visual Code telepítése
+4. Bootstrap telepítése: npm i bootstrap@3.3.6
+5. jQuery telepítése: npm i jquery@2.2.3
+6. Angularjs telepítése: npm i angular@1.5.5
+7. Grunt watch telepítése: npm i grunt-contrib-watch --save
+8. Grunt uglify telepítése: npm i grunt-contrib-uglify --save
+9. Grunt cli telepítése: npm install -g grunt-cli
+10. Grunt cssmin telepítése: npm install grunt-contrib-cssmin --save
+11. Grunt copy telepítése: npm install grunt-contrib-copy --save
+12. Bower telepítése: npm install -g bower, utána: bower init
+13. Font awesome telepítése bowerrel: bower install fontawesome@4.6.3
+14. bower install fontawesome --save
+15. Babel telepítése: npm install --save babel-core@6.9.0
+16. Babel telepítése: npm install --save grunt-babel babel-preset-es2015
+17. Grunt tasks telepítése: npm install --save load-grunt-tasks
+18. Grunt concat telepítése: npm i grunt-contrib-concat --save
+19. Express telepítése (saját server): npm install express --save
+20. Cookie parser node js csomag telepítése: npm install cookie-parser --save
+
+
+Git parancsok (repository beállítása után a helyi gépen):
+Feltöltés:
+1. git status
+2. git add --all
+3. git commint --all -m "Felöltendő üzenet"
+4. git push
+
+Letöltés:
+1. git fetch
+2. git checkout <branch>, branch váltásnál kell megadni a branch nevét 
+3. Branch beillesztése: git checkout add-angular
+4. Repo lemásolása helyi gépre: git clone <url>, utána "npm i" parancs a node modulok telepítéséhez
+
+
+Node js helyi HTTP szerver telepítése:
+1. nodejs feltelepítése
+2. nodejs http szerver telepítése: npm install -g http-server
+3. A projekt mappában elindítani a szervert: http-server
+4. Windows tűzfalon NEM kell átengedni
+5. Visual studio code launch.json fájlba beállítani a "url": "http://localhost:8081" paramétert
+
+
+Egy projekt letöltése és beállítása a gitről:
+1. Projekt mapp létrehozása és cmd
+2. git clone <projekt_git_url>
+3. npm i
+4. bower install
+5. Branch váltása: git checkout <branch_nev> (ha szükséges)
+6. Grunt futtatása a buildhez
