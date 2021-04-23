@@ -40,30 +40,27 @@ function($routeProvider, $locationProvider) {
 }]);;// Login kezelése
 webapp.factory('userFactory', ['$q', '$http', function($q, $http){
     return {
-        checkLogin: function(loginData) {
+        doLogin: function(loginData) {
             var deferred = $q.defer();
 
-            // Lekérjük a felhasználókat, SZERVEREN A HELYE!!!
-            this.getUsers().then(function(users) {
-                // Megkeressük az adott felhasználót
-                var loggedIn = false;
-                for(var k in users) {
-                    if (users[k].email === loginData.email && users[k].pass === loginData.pass) {
-                        loggedIn = true;
-                    }
-                }
-                deferred.resolve(loggedIn);
-                return loggedIn;
-            }, function() { // hiba függvény
-                console.log('Hiba a szerver kapcsolatban!');
-                deferred.resolve(loggedIn);
-            });
+            $http.post('/dologin', loginData)
+                .then(function(loginResponse) {
+                    deferred.resolve(loginResponse.data);
+                });
+            return deferred.promise;
+        },
+        checkLogin: function() {
+            var deferred = $q.defer();
 
+            $http.get('/checklogin')
+                .then(function(loginResponse) {
+                    deferred.resolve(loginResponse.data);
+                });
             return deferred.promise;
         },
         getUsers: function() {
             var deferred = $q.defer();
-            $http.get('json/user.json')
+            $http.get('/users')
                 .then( function(serverData){
                     deferred.resolve(serverData.data);
                 }, function(err) { // hiba függvény
@@ -75,23 +72,31 @@ webapp.factory('userFactory', ['$q', '$http', function($q, $http){
 }]); ;// Body controller
 webapp.controller( "bodyController", ['$scope', '$http', 'userFactory', '$rootScope', 
     function($scope, $http, userFactory, $rootScope){
-        $scope.isLoggedIn = true;
+        $scope.isLoggedIn = false;
         $scope.defaultContent = 'index';
         $scope.currentContentName = '';
         
-        // Bejelentkezés
-        $scope.doLogin = function() {
-            if (!$scope.loginData) {
+        // Ha már be van jelentkezve és van érvényes tokenje
+        userFactory.checkLogin()
+            .then(function(res) {
+                $scope.isLoggedIn = res.loggedIn;
+                $scope.currentUser = res.user;
+            });
+
+        // Bejelentkezés, a login form gombjára kattintva
+        $scope.doLogin = function(loginData) {
+            // console.log('loginData', loginData);
+            if (!loginData) {
                 alert('Kérjük töltse ki a mezőket!');
                 return;
             }
-            if (!$scope.loginData.email || !$scope.loginData.pass) {
+            if (!loginData.email || !loginData.pass) {
                 alert('Kérjük töltse ki a mezőket!');
                 return;
             }
-            userFactory.checkLogin($scope.loginData)
-                .then(function(loggedIn) {
-                    $scope.isLoggedIn = loggedIn;
+            userFactory.doLogin(loginData)
+                .then(function(serverData) {
+                    $scope.isLoggedIn = serverData.loggedIn;
                 });
         }
 

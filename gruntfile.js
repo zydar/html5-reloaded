@@ -43,11 +43,6 @@ module.exports = grunt => {
               dest: 'build/fonts'
             },{
               expand: true,
-              cwd: 'src/json',
-              src: '**',
-              dest: 'build/json'
-            },{
-              expand: true,
               cwd: 'src',
               src: '**/*.html',
               dest: 'build'

@@ -1,23 +1,31 @@
 // Body controller
 webapp.controller( "bodyController", ['$scope', '$http', 'userFactory', '$rootScope', 
     function($scope, $http, userFactory, $rootScope){
-        $scope.isLoggedIn = true;
+        $scope.isLoggedIn = false;
         $scope.defaultContent = 'index';
         $scope.currentContentName = '';
         
-        // Bejelentkezés
-        $scope.doLogin = function() {
-            if (!$scope.loginData) {
+        // Ha már be van jelentkezve és van érvényes tokenje
+        userFactory.checkLogin()
+            .then(function(res) {
+                $scope.isLoggedIn = res.loggedIn;
+                $scope.currentUser = res.user;
+            });
+
+        // Bejelentkezés, a login form gombjára kattintva
+        $scope.doLogin = function(loginData) {
+            // console.log('loginData', loginData);
+            if (!loginData) {
                 alert('Kérjük töltse ki a mezőket!');
                 return;
             }
-            if (!$scope.loginData.email || !$scope.loginData.pass) {
+            if (!loginData.email || !loginData.pass) {
                 alert('Kérjük töltse ki a mezőket!');
                 return;
             }
-            userFactory.checkLogin($scope.loginData)
-                .then(function(loggedIn) {
-                    $scope.isLoggedIn = loggedIn;
+            userFactory.doLogin(loginData)
+                .then(function(serverData) {
+                    $scope.isLoggedIn = serverData.loggedIn;
                 });
         }
 
