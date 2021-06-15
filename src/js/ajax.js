@@ -38,7 +38,7 @@ function fillTable(users) {
     for (var k in users) {
         var id = 'user_'+(k+1);
         var tr = $('<tr />');
-        tr.append( $('<td />').html((id)) );
+        tr.append( $('<td />').html(id) );
         for (var kk in keys) {
             tr.append( $('<td data-name="'+keys[kk]+'" />')
                 .html(users[k][keys[kk]]) );
@@ -60,7 +60,8 @@ function fillTable(users) {
 // Tábla frissítése
 function updateTable(tr, userData) {
     tr.find('td').each(function(key, td){
-        var k = $(td).data('name');
+        // console.log($(td).data('name'));
+        var k = $(td).data('name'); // data-name
         $(td).html(userData[k]);
     });
 }
